@@ -14,8 +14,8 @@ public class Participant {
     @Id
     private String login;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @JsonIgnore
