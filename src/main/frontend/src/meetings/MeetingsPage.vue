@@ -38,7 +38,8 @@
         },
         methods: {
             addNewMeeting(meeting) {
-                this.$http.post('meetings', meeting).then(response => this.meetings.push(response.body));
+                this.$http.post('meetings', meeting).then(response => this.fetchMeetings());
+			
             },
             addMeetingParticipant(meeting) {
                 meeting.participants.push(this.username);
@@ -47,11 +48,15 @@
                 meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
             },
             deleteMeeting(meeting) {
-                this.meetings.splice(this.meetings.indexOf(meeting), 1);
+                this.$http.delete('meetings/' + meeting.id).then(response => this.fetchMeetings());
+	
+			   
             },
 
             fetchMeetings(){
-                this.$http.get('meetings').then(response => this.meetings = response.body);
+                this.$http.get('meetings').then(response => {
+					this.meetings  = response.body;
+});
             }
         }
     }

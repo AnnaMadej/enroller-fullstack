@@ -28,5 +28,17 @@ public class MeetingService {
         transaction.commit();
         return meeting;
     }
+    
+    public Meeting delete(Meeting meeting) {
+		Transaction transaction = connector.getSession().beginTransaction();
+		System.out.println(meeting) ;
+		connector.getSession().delete(meeting);
+		transaction.commit();
+		return meeting;
+	}
+
+    public Meeting findById(long meetingId) {
+		return (Meeting) connector.getSession().get(Meeting.class, meetingId);
+	}
 
 }
