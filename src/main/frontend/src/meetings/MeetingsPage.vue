@@ -47,7 +47,7 @@
 				//meeting.participants.push(this.username);
             },
             removeMeetingParticipant(meeting) {
-                meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
+                  this.$http.delete('meetings/' + meeting.id + "/" + this.username).then(response => this.fetchMeetings());
             },
             deleteMeeting(meeting) {
                 this.$http.delete('meetings/' + meeting.id).then(() => this.fetchMeetings());

@@ -62,4 +62,19 @@ public class MeetingRestController {
 		meeting = meetingService.updateMeeting(meeting);
 		return new ResponseEntity<Collection<Participant>>(meeting.getParticipants(), HttpStatus.OK);
 	}
+    
+    @RequestMapping(value = "/{id}/{login}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> delParticipant(@PathVariable("id") long meetingId, @PathVariable("login") String login) {
+		Meeting meeting = meetingService.findById(meetingId);
+		Participant participant = participantService.findByLogin(login);
+
+		if (meeting == null || participant == null) {
+			return new ResponseEntity("Unable to update. Participant with login " + login + " or meeting with id "
+					+ +meetingId + " does not exist", HttpStatus.NOT_FOUND);
+		}
+
+		meeting.removeParticipant(participant);
+		meeting = meetingService.updateMeeting(meeting);
+		return new ResponseEntity<Collection<Participant>>(meeting.getParticipants(), HttpStatus.OK);
+	}
 }
