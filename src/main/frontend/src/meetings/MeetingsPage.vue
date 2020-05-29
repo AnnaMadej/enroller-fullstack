@@ -7,6 +7,9 @@
            </span>
     <h3 v-else>
       Zaplanowane zajęcia ({{ meetings.length }})
+
+
+
     </h3>
 
     <meetings-list :meetings="meetings"
