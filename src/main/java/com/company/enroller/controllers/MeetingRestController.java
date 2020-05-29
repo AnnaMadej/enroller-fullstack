@@ -50,7 +50,7 @@ public class MeetingRestController {
     
     @RequestMapping(value = "/{id}/{login}", method = RequestMethod.POST)
 	public ResponseEntity<?> addParticipant(@PathVariable("id") long meetingId, @PathVariable("login") String login) {
-		System.out.println("zapisuję człowieka: " + login + " do spotkania: " + meetingId);
+	
     	Meeting meeting = meetingService.findById(meetingId);
 		Participant participant = participantService.findByLogin(login);
 
