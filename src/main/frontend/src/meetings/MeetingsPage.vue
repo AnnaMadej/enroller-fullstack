@@ -34,12 +34,13 @@
         },
 
         mounted(){
-            this.$http.get('meetings').then(response => this.meetings = response.body);
+            this.fetchMeetings();
         },
         methods: {
             addNewMeeting(meeting) {
-                //this.meetings.push(meeting);
                 this.$http.post('meetings', meeting);
+                this.fetchMeetings();
+                this.$forceUpdate();
             },
             addMeetingParticipant(meeting) {
                 meeting.participants.push(this.username);
@@ -49,6 +50,10 @@
             },
             deleteMeeting(meeting) {
                 this.meetings.splice(this.meetings.indexOf(meeting), 1);
+            },
+
+            fetchMeetings(){
+                this.$http.get('meetings').then(response => this.meetings = response.body);
             }
         }
     }
