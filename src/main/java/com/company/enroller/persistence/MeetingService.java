@@ -40,5 +40,12 @@ public class MeetingService {
     public Meeting findById(long meetingId) {
 		return (Meeting) connector.getSession().get(Meeting.class, meetingId);
 	}
+    
+    public Meeting updateMeeting(Meeting meeting) {
+		Transaction transaction = connector.getSession().beginTransaction();
+		connector.getSession().update(meeting);
+		transaction.commit();
+		return meeting;
+	}
 
 }

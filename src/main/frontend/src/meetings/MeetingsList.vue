@@ -4,7 +4,8 @@
   <table v-if="meetings.length > 0">
     <thead>
     <tr>
-      <th>Nazwa spotkania</th>
+	
+      <th> Nazwa spotkania</th>
       <th>Opis</th>
       <th>data</th>
       <th>Uczestnicy</th>
@@ -13,22 +14,22 @@
     </thead>
     <tbody>
     <tr v-for="meeting in meetings" :key="meeting.id">
-      <td>{{ meeting.title }}</td>
+      <td>{{ meeting.title }} </td>
       <td>{{ meeting.description }}</td>
       <td>{{ meeting.date }}</td>
       <td>
         <ul v-if="meeting.participants">
           <li v-for="participant in meeting.participants" :key="participant">
-            {{ participant }}
+            {{ participant.login }}
           </li>
         </ul>
       </td>
       <td style="text-align: right; min-width: 400px">
-        <button v-if="!isEnrolled(username, meeting)" class="button-outline"
+        <button v-if="!isEnrolled(meeting.participants)" class="button-outline"
                 @click="$emit('attend', meeting)">
           Zapisz się
         </button>
-        <button v-if="isEnrolled(username, meeting)" class="button-outline" @click="$emit('unattend', meeting)">Wypisz się</button>
+        <button v-if="isEnrolled(meeting.participants)" class="button-outline" @click="$emit('unattend', meeting)">Wypisz się</button>
         <button v-if="meeting.participants == null ||  meeting.participants.length == 0 " class="button" @click="$emit('delete', meeting)">
           Usuń puste spotkanie
         </button>
@@ -41,15 +42,15 @@
 <script>
     export default {
         props: ['meetings', 'username'],
+		data: {lol: ""},
       methods: {
-          isEnrolled(username, meeting){
-            for (let participant in meeting.participants){
-              if(participant.name === "username") return true;
-            }
-            return false;
-          }
+          isEnrolled(participants){
+			  if (participants.length==0) return false;
+			  let filteredParticipants = participants.filter(part => part.login===this.username);
+			  return filteredParticipants.length>0;
       }
 
-
-    }
+		  }
+    
+	}
 </script>
