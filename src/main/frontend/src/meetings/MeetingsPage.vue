@@ -29,9 +29,14 @@
                 meetings: []
             };
         },
+
+        mounted(){
+            this.$http.get('meetings').then(response => this.meetings = response.body);
+        },
         methods: {
             addNewMeeting(meeting) {
-                this.meetings.push(meeting);
+                //this.meetings.push(meeting);
+                this.$http.post('meetings', meeting);
             },
             addMeetingParticipant(meeting) {
                 meeting.participants.push(this.username);

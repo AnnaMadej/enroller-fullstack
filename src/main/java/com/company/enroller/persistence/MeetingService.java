@@ -2,6 +2,7 @@ package com.company.enroller.persistence;
 
 import com.company.enroller.model.Meeting;
 import org.hibernate.Query;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -21,5 +22,11 @@ public class MeetingService {
         return query.list();
     }
 
+    public Meeting add(Meeting meeting) {
+        Transaction transaction = connector.getSession().beginTransaction();
+        connector.getSession().save(meeting);
+        transaction.commit();
+        return meeting;
+    }
 
 }
