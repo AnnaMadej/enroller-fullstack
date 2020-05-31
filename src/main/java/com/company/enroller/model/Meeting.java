@@ -1,6 +1,9 @@
 package com.company.enroller.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,7 +34,7 @@ public class Meeting {
 	private String description;
 
 	@Column
-	private String date;
+	private Date date;
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
 	@JoinTable(name = "meeting_participant", joinColumns = { @JoinColumn(name = "meeting_id") }, inverseJoinColumns = {
@@ -39,35 +42,44 @@ public class Meeting {
 	Set<Participant> participants = new HashSet<>();
 
 	public void addParticipant(Participant participant) {
-		participants.add(participant);
+		this.participants.add(participant);
 	}
 
 	public String getDate() {
-		return date;
+		return new SimpleDateFormat("yyyy-MM-dd").format(this.date);
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public long getId() {
-		return id;
+		return this.id;
 	}
 
 	public Collection<Participant> getParticipants() {
-		return participants;
+		return this.participants;
 	}
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void removeParticipant(Participant participant) {
-		participants.remove(participant);
+		this.participants.remove(participant);
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public void setDate(String date) {
-		this.date = date;
+		date.replaceAll(".", "-");
+		try {
+			this.date = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+		} catch (ParseException e) {
+			this.date = new Date();
+		}
 	}
 
 	public void setDescription(String description) {
