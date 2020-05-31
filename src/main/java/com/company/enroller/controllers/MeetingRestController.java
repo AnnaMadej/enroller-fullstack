@@ -28,8 +28,13 @@ public class MeetingRestController {
 
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public ResponseEntity<?> addMeeting(@RequestBody Meeting meeting) {
-		this.meetingService.add(meeting);
-		return new ResponseEntity<>(meeting, HttpStatus.CREATED);
+		try {
+			this.meetingService.add(meeting);
+			return new ResponseEntity<>(meeting, HttpStatus.CREATED);
+		} catch (IllegalArgumentException e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+
 	}
 
 	@RequestMapping(value = "/{id}/participants/{login}", method = RequestMethod.POST)

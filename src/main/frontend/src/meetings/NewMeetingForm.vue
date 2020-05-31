@@ -7,7 +7,9 @@
       <label>Opis</label>
       <textarea v-model="newMeeting.description"/>
       <label>Data</label>
-      <input type="date" v-model="newMeeting.date" placeholder="rrrr.mm.dd" pattern="[0-9]{4}.(0[1-9]|1[012]).(0[1-9]|1[0-9]|2[0-9]|3[01])">
+      <input type="date" v-model="newMeeting.date" placeholder="rrrr-MM-dd" >
+	  <label>Godzina</label>
+      <input type="time" v-model="newMeeting.time" placeholder="GG:mm" >
       <button>Dodaj</button>
       <span class="error" v-if="error">{{error}}</span>
     </form>
@@ -26,13 +28,17 @@
         },
         methods: {
             addNewMeeting() {
-                this.error = "";
+                this.error = "";	
 				if (!this.newMeeting.title)  this.error = "Spotkanie musi mieć nazwę!";
 				else if (!this.newMeeting.date)  this.error = "Spotkanie musi mieć datę!";
+				else if (!this.newMeeting.time)  this.error = "Spotkanie musi mieć godzinę!";
                 else {
-                    this.$emit('added', this.newMeeting);
-                    this.newMeeting = {participants: []};
-                    this.adding = false;
+					if (!this.newMeeting.date.match("^(19[5-9][0-9]|20[0-4][0-9]|2050)[-](0?[1-9]|1[0-2])[-](0?[1-9]|[12][0-9]|3[01])$")) this.error = "Zły format daty!";
+					else if (!this.newMeeting.time.match( "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")) this.error = "Wprowadź czas w formacie GG.mm";
+                    else {
+						this.$emit('added', this.newMeeting);
+						this.newMeeting = {participants: []};
+						this.adding = false; }
                 } 
             }
         }

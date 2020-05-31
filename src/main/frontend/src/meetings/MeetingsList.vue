@@ -8,6 +8,7 @@
       <th> Nazwa spotkania</th>
       <th>Opis</th>
       <th>data</th>
+	  <th>godzina</th>
       <th>Uczestnicy</th>
       <td></td>
     </tr>
@@ -17,6 +18,7 @@
       <td>{{ meeting.title }} </td>
       <td>{{ meeting.description }}</td>
       <td>{{ meeting.date }}</td>
+	  <td>{{ meeting.time }}</td>
       <td>
         <ul v-if="meeting.participants">
           <li v-for="participant in meeting.participants" :key="participant">
