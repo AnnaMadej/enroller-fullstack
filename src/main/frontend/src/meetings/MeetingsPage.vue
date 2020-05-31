@@ -42,12 +42,12 @@
 			
             },
             addMeetingParticipant(meeting) {
-                 this.$http.post('meetings/' + meeting.id + "/" + this.username).then(response => this.fetchMeetings());
+                 this.$http.post('meetings/' + meeting.id + "/participants/" + this.username).then(response => this.fetchMeetings());
 				
 				//meeting.participants.push(this.username);
             },
             removeMeetingParticipant(meeting) {
-                  this.$http.delete('meetings/' + meeting.id + "/" + this.username).then(response => this.fetchMeetings());
+                  this.$http.delete('meetings/' + meeting.id + "/participants/" + this.username).then(response => this.fetchMeetings());
             },
             deleteMeeting(meeting) {
                 this.$http.delete('meetings/' + meeting.id).then(() => this.fetchMeetings());
