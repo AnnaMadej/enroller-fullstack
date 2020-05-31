@@ -13,36 +13,33 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private ParticipantProvider participantProvider;
+	@Autowired
+	private ParticipantProvider participantProvider;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
-    @Value("${security.secret}")
-    private String secret;
+	@Value("${security.secret}")
+	private String secret;
 
-    @Value("${security.issuer}")
-    private String issuer;
+	@Value("${security.issuer}")
+	private String issuer;
 
-    @Value("${security.token_expiration_in_seconds}")
-    private int tokenExpiration;
+	@Value("${security.token_expiration_in_seconds}")
+	private int tokenExpiration;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/participants").permitAll()
-                .antMatchers("/api/tokens").permitAll()
-                .antMatchers("/api/**").authenticated()
-                .and()
-                .addFilterBefore(new JWTAuthenticationFilter(authenticationManager(), secret, issuer, tokenExpiration), UsernamePasswordAuthenticationFilter.class)
-                .addFilter(new JWTAuthorizationFilter(authenticationManager(), secret))
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
+	@Override
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(participantProvider).passwordEncoder(passwordEncoder);
+	}
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(participantProvider).passwordEncoder(passwordEncoder);
-    }
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, "/api/participants").permitAll()
+		.antMatchers("/api/tokens").permitAll().antMatchers("/api/**").authenticated().and()
+		.addFilterBefore(new JWTAuthenticationFilter(authenticationManager(), secret, issuer, tokenExpiration),
+				UsernamePasswordAuthenticationFilter.class)
+		.addFilter(new JWTAuthorizationFilter(authenticationManager(), secret)).sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+	}
 }
