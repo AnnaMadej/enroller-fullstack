@@ -1,7 +1,7 @@
 package com.company.enroller.model;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -34,7 +34,7 @@ public class Meeting {
 	private String description;
 
 	@Column
-	private Date date;
+	private Date date = new Date();
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
 	@JoinTable(name = "meeting_participant", joinColumns = { @JoinColumn(name = "meeting_id") }, inverseJoinColumns = {
@@ -74,12 +74,16 @@ public class Meeting {
 	}
 
 	public void setDate(String date) {
-		date.replaceAll(".", "-");
-		try {
-			this.date = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-		} catch (ParseException e) {
-			this.date = new Date();
+		String delimiter = ".";
+		if (date.contains("-")) {
+			delimiter = "-";
 		}
+		String[] timeArray = date.split(delimiter);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.valueOf(timeArray[0]));
+		cal.set(Calendar.MONTH, Integer.valueOf(timeArray[1]) - 1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.valueOf(timeArray[2]));
+		this.date = cal.getTime();
 	}
 
 	public void setDescription(String description) {
@@ -92,6 +96,19 @@ public class Meeting {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public void setTime(String time) {
+		String[] timeArray = time.split(":");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(this.date);
+		cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(timeArray[0]));
+		cal.set(Calendar.MINUTE, Integer.valueOf(timeArray[1]));
+		this.date = cal.getTime();
+	}
+
+	public String getTime() {
+		return new SimpleDateFormat("HH:mm").format(this.date);
 	}
 
 }
